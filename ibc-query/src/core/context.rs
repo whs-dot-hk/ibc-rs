@@ -52,7 +52,7 @@ pub trait QueryContext: ProvableContext + ValidationContext {
     fn packet_commitments(
         &self,
         channel_end_path: &ChannelEndPath,
-    ) -> Result<Vec<PacketState>, HostError>;
+    ) -> Result<(Vec<PacketState>, Option<Height>), HostError>;
 
     /// Filters the list of packet sequences for the given channel end that are acknowledged.
     /// Returns all the packet acknowledgements if `sequences` is empty.

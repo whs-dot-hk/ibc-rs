@@ -255,15 +255,15 @@ where
 {
     let channel_end_path = ChannelEndPath::new(&request.port_id, &request.channel_id);
 
-    let commitments = ibc_ctx
-        .packet_commitments(&channel_end_path)?
-        .into_iter()
-        .map(Into::into)
-        .collect();
+    let commitments = ibc_ctx.packet_commitments(&channel_end_path)?;
+
+    let height = commitments.1;
+
+    let commitments = commitments.0.into_iter().map(Into::into).collect();
 
     Ok(QueryPacketCommitmentsResponse::new(
         commitments,
-        ibc_ctx.host_height()?,
+        height.unwrap_or(ibc_ctx.host_height()?),
         None,
     ))
 }

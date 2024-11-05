@@ -412,7 +412,7 @@ where
     fn packet_commitments(
         &self,
         channel_end_path: &ChannelEndPath,
-    ) -> Result<Vec<PacketState>, HostError> {
+    ) -> Result<(Vec<PacketState>, Option<Height>), HostError> {
         let path = format!(
             "commitments/ports/{}/channels/{}/sequences",
             channel_end_path.0, channel_end_path.1
@@ -444,6 +444,7 @@ where
                     })
             })
             .collect::<Result<Vec<_>, _>>()
+            .map(|v| (v, None))
     }
 
     /// Returns the acknowledged packets associated with a channel.
