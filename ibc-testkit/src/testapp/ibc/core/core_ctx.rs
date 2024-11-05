@@ -508,21 +508,24 @@ where
         &self,
         channel_end_path: &ChannelEndPath,
         sequences: impl ExactSizeIterator<Item = Sequence>,
-    ) -> Result<Vec<Sequence>, HostError> {
+    ) -> Result<(Vec<Sequence>, Option<Height>), HostError> {
         // QUESTION. Currently only works for unordered channels; ordered channels
         // don't use receipts. However, ibc-go does it this way. Investigate if
         // this query only ever makes sense on unordered channels.
 
-        Ok(sequences
-            .into_iter()
-            .map(|seq| ReceiptPath::new(&channel_end_path.0, &channel_end_path.1, seq))
-            .filter(|receipt_path| {
-                self.packet_receipt_store
-                    .get(StoreHeight::Pending, receipt_path)
-                    .is_none()
-            })
-            .map(|receipts_path| receipts_path.sequence)
-            .collect())
+        Ok((
+            sequences
+                .into_iter()
+                .map(|seq| ReceiptPath::new(&channel_end_path.0, &channel_end_path.1, seq))
+                .filter(|receipt_path| {
+                    self.packet_receipt_store
+                        .get(StoreHeight::Pending, receipt_path)
+                        .is_none()
+                })
+                .map(|receipts_path| receipts_path.sequence)
+                .collect(),
+            None,
+        ))
     }
 
     /// Returns all the unreceived IBC acknowledgements associated with a channel and sequences.

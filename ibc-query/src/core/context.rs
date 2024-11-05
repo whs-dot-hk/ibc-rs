@@ -67,7 +67,7 @@ pub trait QueryContext: ProvableContext + ValidationContext {
         &self,
         channel_end_path: &ChannelEndPath,
         sequences: impl ExactSizeIterator<Item = Sequence>,
-    ) -> Result<Vec<Sequence>, HostError>;
+    ) -> Result<(Vec<Sequence>, Option<Height>), HostError>;
 
     /// Filters the list of packet sequences for the given channel end whose acknowledgement is not received.
     /// Returns all the unreceived acknowledgements if `sequences` is empty.

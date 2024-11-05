@@ -384,8 +384,8 @@ where
     let unreceived_packets = ibc_ctx.unreceived_packets(&channel_end_path, sequences)?;
 
     Ok(QueryUnreceivedPacketsResponse::new(
-        unreceived_packets,
-        ibc_ctx.host_height()?,
+        unreceived_packets.0,
+        unreceived_packets.1.unwrap_or(ibc_ctx.host_height()?),
     ))
 }
 
